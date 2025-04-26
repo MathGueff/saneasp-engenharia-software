@@ -3,7 +3,7 @@ use SANEASP
 
 create table Usuarios(
 	id_usuario int not null identity (1,1) primary key,
-	nome_usuario varchar(50) not null,
+	nome varchar(50) not null,
 	telefone varchar(14),
 	email varchar(40) not null unique,
 	senha varchar(100) not null,
@@ -12,7 +12,7 @@ create table Usuarios(
 	cidade varchar(30),
 	bairro varchar(30),
 	rua varchar(30),
-	numero varchar(30),
+	numero varchar(10),
 	complemento varchar(30)
 )
 
@@ -26,9 +26,9 @@ create table Administradores(
 create table Tabela_logs(
 	id_log int not null identity(1,1) primary key,
 	operacao varchar(10) not null,
-	conteudo_log varchar(500) not null,
-	versao_conteudo varchar(10) not null,
-	data_log datetime not null default GETDATE(),
+	conteudo_reclamacao varchar(500) not null,
+	conteudo_versao varchar(10),
+	data_criacao datetime not null default GETDATE(),
 	id_usuario int not null
 	Constraint fk_usuario_log foreign key (id_usuario) references Usuarios(id_usuario) 
 )
@@ -46,7 +46,7 @@ create table Doencas(
 
 create table Sintomas(
 	id_sintoma int not null identity(1,1) primary key,
-	nome_sintoma varchar(50) not null
+	nome varchar(50) not null
 )
 
 create table Sintomas_doenca(
@@ -59,8 +59,8 @@ create table Sintomas_doenca(
 
 create table Reclamacoes (
 	id_reclamacao int not null identity(1,1) primary key,
-	titulo_reclamacao varchar(50) not null,
-	descricao_reclamacao varchar(500) not null,
+	titulo varchar(50) not null,
+	descricao varchar(500) not null,
 	cep char(8),
 	cidade varchar(30),
 	bairro varchar(30),
@@ -68,7 +68,7 @@ create table Reclamacoes (
 	numero varchar(30),
 	complemento varchar(30),
 	status_reclamacao varchar(20) not null,
-	data_reclamacao datetime default GETDATE() not null,
+	data_criacao datetime default GETDATE() not null,
 	pontuacao decimal(5,2) not null,
 	id_usuario int not null,
 	Constraint fk_usuario_reclamacao foreign key (id_usuario) references Usuarios(id_usuario)
@@ -76,8 +76,8 @@ create table Reclamacoes (
 
 create table Comentarios(
 	id_comentario int not null identity(1,1) primary key,
-	descricao_comentario varchar(500) not null,
-	data_comentario datetime default GETDATE() not null,
+	descricao varchar(500) not null,
+	data_criacao datetime default GETDATE() not null,
 	id_admin int,
 	id_usuario int,
 	id_reclamacao int not null,
@@ -88,14 +88,14 @@ create table Comentarios(
 
 create table Imagens_reclamacao(
 	id_imagem_reclamacao int not null identity(1,1) primary key,
-	imagem_reclamacao varchar(100) not null,
+	nome_imagem varchar(100) not null,
 	id_reclamacao int not null
 	Constraint fk_imagem_reclamacao foreign key (id_reclamacao) references Reclamacoes(id_reclamacao)
 )
 
 create table Tags(
 	id_tag int not null identity(1,1) primary key,
-	nome_tag varchar(50) not null
+	nome varchar(50) not null
 )
 
 create table Tags_reclamacao(
@@ -108,25 +108,11 @@ create table Tags_reclamacao(
 
 create table Noticias (
 	id_noticia int not null identity(1,1) primary key,
-	titulo_noticia varchar(50) not null,
-	descricao_noticia varchar(500) not null,
-	data_publicacao_noticia datetime not null default GETDATE(),
+	titulo varchar(50) not null,
+	descricao varchar(500) not null,
+	data_criacao datetime not null default GETDATE(),
 	id_admin int not null
 	Constraint fk_noticia_administrador foreign key (id_admin) references Administradores(id_admin)
-)
-
-create table Imagens_noticia(
-	id_imagem_noticia int not null identity(1,1) primary key,
-	imagem_noticia varchar(100) not null,
-	id_noticia int not null
-	Constraint fk_imagem_noticia foreign key (id_noticia) references Noticias(id_noticia)
-)
-
-create table Fontes_noticia(
-	id_fonte_noticia int not null identity(1,1) primary key,
-	fonte_noticia varchar(255) not null,
-	id_noticia int not null
-	Constraint fk_fonte_noticia foreign key (id_noticia) references Noticias(id_noticia)
 )
 
 create table Tags_noticia(
@@ -137,21 +123,7 @@ create table Tags_noticia(
 	Constraint fk_tags_noticia_noticia foreign key (id_noticia) references Noticias(id_noticia)
 )
 
-create table Imagens_doenca(
-	id_imagem_doenca int not null identity(1,1) primary key,
-	imagem_doenca varchar(100) not null,
-	id_doenca int not null
-	Constraint fk_imagem_doenca foreign key (id_doenca) references Doencas(id_doenca)
-)
-
-create table Fontes_doenca(
-	id_fonte_doenca int not null identity(1,1) primary key,
-	fonte_doenca varchar(255) not null,
-	id_doenca int not null
-	Constraint fk_fonte_doenca foreign key (id_doenca) references Doencas(id_doenca)
-)
-
-insert into Usuarios(nome_usuario, telefone, cep, cidade, bairro, complemento, rua, numero, email, senha, cpf)
+insert into Usuarios(nome, telefone, cep, cidade, bairro, complemento, rua, numero, email, senha, cpf)
 values
 ('Davy Oliveira', '12345678910123', '18075718', 'Sorocaba','Wanel', 'Fundos', 'Alonco Muchon', '122', 'davy@gmail.com', '12345', '12345678910'),
 ('Adryann Theylor', '1098765432101', '57181807', 'Votorantim','Vossoroca', 'bloco A', 'Natal', '122', 'etec@etec.com', 'senhaconfiavel', '12310456789'),
@@ -171,7 +143,7 @@ VALUES
 (5, 1)
 
 -- Log
-INSERT INTO Tabela_logs (operacao, data_log, conteudo_log, versao_conteudo, id_usuario)
+INSERT INTO Tabela_logs (operacao, data_criacao, conteudo_reclamacao, conteudo_versao, id_usuario)
 VALUES 
 ('INSERÇÃO', '2022-02-10 00:00:00.000', 'Achei um problema no meu encanamento, tem algumbixo la dentrueui', 'criação', 1),
 ('EDIÇÃO', '2022-28-10 00:00:00.000', 'Achei um problema no meu encanamento, tem algumbixo la dentrueui', 'antigo', 1),
@@ -191,7 +163,7 @@ VALUES
 ('Leptospirose','Doença do rato', 'Infeccção', 'Tentar melhorar', 2, '2024-05-08 00:00:00.000')
 
 -- Sintomas
-INSERT INTO Sintomas (nome_sintoma)
+INSERT INTO Sintomas (nome)
 VALUES 
 ('Febre'),
 ('Tosse'),
@@ -211,7 +183,7 @@ VALUES
 (2, 2)
 
 -- Reclamacoes
-INSERT INTO Reclamacoes (id_usuario, titulo_reclamacao, descricao_reclamacao, cep, cidade, bairro, rua, numero, complemento, status_reclamacao, pontuacao, data_reclamacao)
+INSERT INTO Reclamacoes (id_usuario, titulo, descricao, cep, cidade, bairro, rua, numero, complemento, status_reclamacao, pontuacao, data_criacao)
 VALUES 
 (6, 'Minha rua ta ruim', 'Muitos buracos na rua', '18075718', 'Sorocaba', 'Jardim Flores','Seu Campo','123', null, 'visualizada', 5,'2020-12-12 00:00:00.000'),
 (6, 'Vi que tem um problema aqui perto', 'Tem um problema acontecendo aqui no meu bairro', '10757188', 'Sorocaba', 'Jardim Seco','Meu Campo','231', null, 'enviado', 4,'2022-10-05 00:00:00.000'),
@@ -220,7 +192,7 @@ VALUES
 (7, 'DEU UM PROBLEMÃO', 'Nem eu sei oq é, só sei que é um grande problema, um PROBLEMÃO', '80715718', 'Votorantim', 'Seu Flores','Seu Jardim',null, null,'resolvida', 10, '2023-01-01 00:00:00.000')
 
 -- Comentários
-INSERT INTO Comentarios (id_admin, id_usuario, id_reclamacao, descricao_comentario, data_comentario)
+INSERT INTO Comentarios (id_admin, id_usuario, id_reclamacao, descricao, data_criacao)
 VALUES 
 (2, 2, 5, 'Que problemão é esse? Seja mais específico', '2022-10-10 00:00:00.000'),
 (null, 7, 5, 'Mano, um problemão, tipo muito', '2022-11-10 00:00:00.000'),
@@ -231,7 +203,7 @@ VALUES
 (1, 1, 1, 'Sua rua ta ruim é? Sinto muito por você', '2024-15-11 00:00:00.000')
 
 -- Imagens_reclamacao
-INSERT INTO Imagens_reclamacao (imagem_reclamacao, id_reclamacao)
+INSERT INTO Imagens_reclamacao (nome_imagem, id_reclamacao)
 VALUES 
 ('agua.jpg', 1),
 ('icone_problema.png', 2),
@@ -241,7 +213,7 @@ VALUES
 ('icone_problema_grande.jpg', 5)
 
 -- Tags
-INSERT INTO Tags (nome_tag)
+INSERT INTO Tags (nome)
 VALUES 
 ('Vazamento'),
 ('Esgoto'),
@@ -260,31 +232,13 @@ VALUES
 (4,2)
 
 -- Noticia
-INSERT INTO Noticias (titulo_noticia, descricao_noticia, id_admin, data_publicacao_noticia)
+INSERT INTO Noticias (titulo, descricao, id_admin, data_criacao)
 VALUES 
 ('Corrigimos uma encanação', 'Deu tudo certo pessoal fiquem tranquilos', 1,'2022-08-10 00:00:00.000'),
 ('Dia Mundial da Água', 'Dia mundial da água estamos distribuindo água', 1,'2022-09-10 00:00:00.000'),
 ('Reclamação esquisita aparece no nosso site', 'Pessoal´, é urgente que entendam que esse site é apenas para reclamações sobre saneamento básico e não para desabafos', 3,'2022-12-12 00:00:00.000'),
 ('Bebam Água', 'Lembre-se de beber água', 2,'2022-15-12 00:00:00.000'),
 ('Se beber dirija!', 'Não se esqueçam de se hidratar, mesmo no trânsito! Só cuidado pra não bater (e sem bebidas alcoolicas, É PRA BEBER ÁGUA)', 4,'2024-20-11 00:00:00.000')
-
--- Imagem_noticia
-INSERT INTO Imagens_noticia (imagem_noticia, id_noticia)
-VALUES 
-('WhatsApp Image 2024-10-14 at 18.39.24.jpg', 1),
-('agua_feliz.jpg', 2),
-('aviso.jpg', 3),
-('bebendo_agua_icone.jpg', 4),
-('sebebernaodirija-icone.jpg', 5)
-
--- Fontes_noticia
-INSERT INTO Fontes_noticia (fonte_noticia, id_noticia)
-VALUES 
-('https://cruzeiro.rs.gov.br/noticia/visualizar/id/5250/?prefeitura-resolve-problema-provocado-por-encanamento-particular.html', 1),
-('https://www.peixeboi.org.br/post/dia-mundial-da-%C3%A1gua', 2),
-('https://www.infopedia.pt/dicionarios/lingua-portuguesa/aviso', 3),
-('https://www.unimed.coop.br/viver-bem/saude-em-pauta/a-importancia-da-agua-no-corpo-humano-tire-todas-as-suas-duvidas', 4),
-('https://www.tjdft.jus.br/institucional/imprensa/campanhas-e-produtos/direito-facil/edicao-semanal/se-beber-nao-dirija', 5)
 
 -- Tag_noticia
 INSERT INTO Tags_noticia (id_tag, id_noticia)
@@ -294,24 +248,6 @@ VALUES
 (4, 3),
 (5, 4),
 (5, 5)
-
--- Imagens_noticia
-INSERT INTO Imagens_doenca (imagem_doenca, id_doenca)
-VALUES 
-('esquistossomose.jpg', 1),
-('mosquitao.jpg', 2),
-('doenca.jpg', 3),
-('icone_doenca.jpg', 4),
-('bacteria.png', 5)
-
--- Fontes_doenca
-INSERT INTO Fontes_doenca (fonte_doenca, id_doenca)
-VALUES 
-('https://blog.brkambiental.com.br/doencas-de-veiculacao-hidrica/', 1),
-('https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/d/dengue/', 2),
-('https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/c/colera', 3),
-('https://www.rededorsaoluiz.com.br/doencas/ascaridiase', 4),
-('https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/l/leptospirose', 5)
 
 -- Select para todas as tabelas
 SELECT * FROM Usuarios;
@@ -326,11 +262,7 @@ SELECT * FROM Imagens_reclamacao;
 SELECT * FROM Tags;
 SELECT * FROM Tags_reclamacao;
 SELECT * FROM Noticias;
-SELECT * FROM Imagens_noticia;
-SELECT * FROM Fontes_noticia;
 SELECT * FROM Tags_noticia;
-SELECT * FROM Imagens_doenca;
-SELECT * FROM Fontes_doenca;
 
 -- Mostrando administradores ordenados por nível (De 3 a 1)
 select * from Administradores order by nivel desc
@@ -342,28 +274,25 @@ select * from Reclamacoes where status_reclamacao != 'resolvida'
 select bairro, count(*) as 'Quantidade por bairro' from Usuarios group by bairro
 
 -- Mostrando quais tags tem a reclamação
-select r.titulo_reclamacao, string_agg(t.nome_tag, ', ') as 'Tags da reclamação'
+select r.titulo, string_agg(t.nome, ', ') as 'Tags da reclamação'
 from Reclamacoes r
 inner join Tags_reclamacao tg on tg.id_reclamacao = r.id_reclamacao
 inner join Tags t on t.id_tag = tg.id_tag
-group by r.titulo_reclamacao;
+group by r.titulo;
 
 -- Mostrando quais tags tem a notícia
-select n.titulo_noticia, string_agg(t.nome_tag, ', ') as 'Tags da Notícia'
+select n.titulo, string_agg(t.nome, ', ') as 'Tags da Notícia'
 from Noticias n
 inner join Tags_noticia tn on tn.id_noticia = n.id_noticia
 inner join Tags t on t.id_tag = tn.id_tag
-group by n.titulo_noticia;
+group by n.titulo;
 
-
--- Mostrando todas informações da doença com as tabelas sintomas, imagens e fontes, separadas por vírgula
-select d.nome_doenca, string_agg(s.nome_sintoma, ', ') as 'Tags da Doença',string_agg(imd.imagem_doenca, ', ') as 'Fontes da Doença',  string_agg(fd.fonte_doenca, ', ') as 'Fontes da Doença'
+-- Mostrando todas informações da doença com a tabela sintomas, separadas por vírgula
+select d.nome_doenca, string_agg(s.nome, ', ') as 'Sintomas da Doença'
 from Doencas d
 inner join Sintomas_doenca sd on d.id_doenca = sd.id_doenca
 inner join Sintomas s on sd.id_sintoma = s.id_sintoma
-inner join Fontes_doenca fd on fd.id_doenca = d.id_doenca
-inner join Imagens_doenca imd on imd.id_doenca = d.id_doenca
 group by d.nome_doenca
 
--- Mostrando as 3 reclamãções com maior pontuação e que não tenham sido resolvidas
+-- Mostrando as 3 reclamações com maior pontuação e que não tenham sido resolvidas
 select top 3 * from Reclamacoes where status_reclamacao != 'resolvida' order by pontuacao desc;
