@@ -22,6 +22,18 @@ O **SaneaSP** é um sistema desenvolvido para auxiliar a prefeitura ou o órgão
 
 ## Backlogs & User Stories
 
+<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+
+![Backlog do produto](images/produto_backlog.png)
+
+![Backlog das sprints](images/sprint_backlog1a3.png)
+
+![Backlog das sprints](images/sprint_backlog4a6.png)
+
+![User Stories](images/user-stories.png)
+
+</div>
+
 <span id="prototipo">
 
 ## Protótipo e Documentação
