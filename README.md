@@ -22,7 +22,7 @@ O **SaneaSP** é um sistema desenvolvido para auxiliar a prefeitura ou o órgão
 
 ## Backlogs & User Stories
 
-<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+<div align="center">
 
 ![Backlog do produto](images/produto_backlog.png)
 
